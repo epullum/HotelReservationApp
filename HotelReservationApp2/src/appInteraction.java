@@ -5,7 +5,7 @@ import java.util.Random;
 import java.security.*;
 
 
-public class appInteraction extends applicationUI {
+public class appInteraction extends appUI {
 
 	private int userIdNum;
 	private String userName;
@@ -21,6 +21,8 @@ public class appInteraction extends applicationUI {
 		
 	}
 	
+
+	
 	
 	public static void reservationList(int userId) throws SQLException {
 		String[] roomtable = {"king", "double", "suite"};
@@ -31,15 +33,15 @@ public class appInteraction extends applicationUI {
 			System.out.println(query);
 			dbConn db = new dbConn();
 			ResultSet reservation = db.getData(query);
-			while (reservation.next()) {
-				int transactionNum = reservation.getInt("transNum");
-				Date sDate = reservation.getDate("sDate");
-				Date lDate = reservation.getDate("eDate");
-				//int roomNum = reservation.getInt("roomNum");
-				resTextArea.append("The reservation confirmation number is "+ transactionNum);
-				resTextArea.append("\n The reservation is set for "+ sDate+ " to "+ lDate);
-				resTextArea.append("\n Your room type reserved is a " + roomtable[i]);
-				resTextArea.append("\n----------------------------------------------\n");
+				while (reservation.next()) {
+					int transactionNum = reservation.getInt("transNum");
+					Date sDate = reservation.getDate("sDate");
+					Date lDate = reservation.getDate("eDate");
+					//int roomNum = reservation.getInt("roomNum");
+					reservationTextArea.append("The reservation confirmation number is "+ transactionNum);
+					reservationTextArea.append("\n The reservation is set for "+ sDate+ " to "+ lDate);
+					reservationTextArea.append("\n Your room type reserved is a " + roomtable[i]);
+					reservationTextArea.append("\n----------------------------------------------\n");
 			}
 		}
 	}
