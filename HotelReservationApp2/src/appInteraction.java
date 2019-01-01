@@ -2,26 +2,13 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Random; 
-import java.security.*;
 
 
 public class appInteraction extends appUI {
 
-	private int userIdNum;
-	private String userName;
-	private String userEmail;
-	private String userPhone;
-	private String userAddress;
+
 	static int num;
 	static String name;
-	
-	private appInteraction(){
-
-		
-		
-	}
-	
-
 	
 	
 	public static void reservationList(int userId) throws SQLException {
@@ -160,6 +147,11 @@ public class appInteraction extends appUI {
 		}
 		
 		return numDays;
+	}
+	
+	public static void  initDatabase() throws SQLException {
+		dbConn db = new dbConn();
+		db.initDatabase();
 	}
 	
 }

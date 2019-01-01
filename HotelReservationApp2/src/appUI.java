@@ -24,6 +24,8 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import javax.swing.JSeparator;
+import javax.swing.JPasswordField;
 
 public class appUI {
 
@@ -52,7 +54,6 @@ public class appUI {
 	private JLabel lblExit;
 	private JTextArea txtResultArea;
 	private JTextField txtFieldEmail;
-	private JTextField txtFieldPassword;
 	private JTextPane txtpnPleaseInputYour;
 	private JPanel logInPanel;
 	
@@ -81,6 +82,11 @@ public class appUI {
 	public String[] roomAmount = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
 	public String[] roomType = {"king","double","suite"};
 	private JLabel label;
+	private JPanel adminPanel;
+	private JLabel lblAdministrionPage;
+	private JButton btnInstall;
+	private JTextPane txtpnAdminmessage;
+	private JPasswordField pwdUserpassword;
 
 	/**
 	 * Launch the application.
@@ -144,6 +150,7 @@ public class appUI {
 				bookingPanel.setVisible(false);
 				registerPanel.setVisible(false);
 				reservationPanel.setVisible(false);
+				adminPanel.setVisible(false);
 			}
 			public void mousePressed(MouseEvent e) {
 				lblHome.setForeground(Color.YELLOW);
@@ -217,6 +224,7 @@ public class appUI {
 				logInPanel.setVisible(false);
 				reservationPanel.setVisible(true);
 				bookingPanel.setVisible(false);
+				adminPanel.setVisible(false);
 			}
 			public void mousePressed(MouseEvent e) {
 				lblReservations.setForeground(Color.YELLOW);
@@ -247,6 +255,27 @@ public class appUI {
 		lblAdmin.setForeground(Color.WHITE);
 		lblAdmin.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
 		lblAdmin.setBounds(75, 6, 177, 35);
+		lblAdmin.addMouseListener(new MouseListener() {
+			public void mouseClicked(MouseEvent e) {
+				logInPanel.setVisible(false);
+				welcomePanel.setVisible(false);
+				bookingPanel.setVisible(false);
+				reservationPanel.setVisible(false);
+				registerPanel.setVisible(false);
+				adminPanel.setVisible(true);
+				
+			}
+			public void mousePressed(MouseEvent e) {
+				lblAdmin.setForeground(Color.YELLOW);
+			}
+			public void mouseReleased(MouseEvent e) {
+				lblAdmin.setForeground(Color.WHITE);
+			}
+			public void mouseEntered(MouseEvent e) {
+			}
+			public void mouseExited(MouseEvent e) {	
+			}
+		});
 		btnAdminPanel.add(lblAdmin);
 		
 		JPanel btnExitPanel = new JPanel();
@@ -295,7 +324,7 @@ public class appUI {
 		txtpnWelcome.setText("Welcome to Hotels");
 		txtpnWelcome.setBackground(new Color(102, 102, 255));
 		txtpnWelcome.setEditable(false);
-		txtpnWelcome.setBounds(41, 37, 463, 89);
+		txtpnWelcome.setBounds(41, 37, 350, 89);
 		subHeadingPanel.add(txtpnWelcome);
 		
 		JPanel headingPanel = new JPanel();
@@ -319,6 +348,7 @@ public class appUI {
 				bookingPanel.setVisible(false);
 				reservationPanel.setVisible(false);
 				registerPanel.setVisible(true);
+				adminPanel.setVisible(false);
 				
 			}
 			public void mousePressed(MouseEvent e) {
@@ -347,6 +377,7 @@ public class appUI {
 				bookingPanel.setVisible(false);
 				reservationPanel.setVisible(false);
 				registerPanel.setVisible(false);
+				adminPanel.setVisible(false);
 			}
 			public void mousePressed(MouseEvent e) {
 				lblLogIn.setForeground(Color.YELLOW);
@@ -369,6 +400,66 @@ public class appUI {
 		bookingPanel.setBackground(Color.LIGHT_GRAY);
 		bookingPanel.setBounds(252, 226, 636, 404);
 		bookingPanel.setVisible(false);
+		
+		logInPanel = new JPanel();
+		logInPanel.setBackground(Color.LIGHT_GRAY);
+		logInPanel.setBounds(252, 227, 636, 404);
+		logInPanel.setVisible(false);
+		frame.getContentPane().add(logInPanel);
+		logInPanel.setLayout(null);
+		
+		JLabel lblEmail = new JLabel("Email:");
+		lblEmail.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
+		lblEmail.setBounds(81, 123, 101, 16);
+		logInPanel.add(lblEmail);
+		
+		JLabel lblPassword = new JLabel("Password:");
+		lblPassword.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
+		lblPassword.setBounds(81, 165, 101, 16);
+		logInPanel.add(lblPassword);
+		
+		txtFieldEmail = new JTextField();
+		txtFieldEmail.setBounds(194, 121, 336, 26);
+		logInPanel.add(txtFieldEmail);
+		txtFieldEmail.setColumns(10);
+		
+		JButton btnLogIn = new JButton("Log In");
+		btnLogIn.setBounds(513, 340, 117, 29);
+		btnLogIn.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				reservationTextArea.setText("");
+				String email = txtFieldEmail.getText();
+				String password = pwdUserpassword.getText();
+				try {
+					userNum = appInteraction.userID(email,password);
+					name = appInteraction.userName(email,password);
+				} catch (SQLException e1) {
+					System.out.println(e1);
+				}
+				txtpnWelcome.setText("Welcome, "+name+"\n Account Number: "+userNum);
+				logInPanel.setVisible(false);
+				welcomePanel.setVisible(true);
+				bookingPanel.setVisible(false);	
+				lblReservationLogIn.setText("Your Reservations are Listed Below");
+				try {
+					appInteraction.reservationList(userNum);
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+				}
+			}
+		});
+		logInPanel.add(btnLogIn);
+		
+		txtpnPleaseInputYour = new JTextPane();
+		txtpnPleaseInputYour.setBackground(Color.LIGHT_GRAY);
+		txtpnPleaseInputYour.setFont(new Font("Apple Chancery", Font.PLAIN, 20));
+		txtpnPleaseInputYour.setText("Please input your email and password.");
+		txtpnPleaseInputYour.setBounds(48, 42, 501, 29);
+		logInPanel.add(txtpnPleaseInputYour);
+		
+		pwdUserpassword = new JPasswordField();
+		pwdUserpassword.setBounds(194, 163, 336, 26);
+		logInPanel.add(pwdUserpassword);
 		
 		welcomePanel = new JPanel();
 		welcomePanel.setBackground(Color.LIGHT_GRAY);
@@ -573,9 +664,6 @@ public class appUI {
 		btnRegister.setBounds(490, 337, 117, 29);
 		registerPanel.add(btnRegister);
 		
-		String[] roomAmount = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
-		
-		String[] roomType = {"king","double","suite"};
 		
 		reservationPanel = new JPanel();
 		reservationPanel.setBackground(new Color(192, 192, 192));
@@ -599,69 +687,35 @@ public class appUI {
 		lblReservationLogIn.setBounds(24, 55, 334, 39);
 		reservationPanel.add(lblReservationLogIn);
 		
-		logInPanel = new JPanel();
-		logInPanel.setBackground(Color.LIGHT_GRAY);
-		logInPanel.setBounds(252, 227, 636, 404);
-		logInPanel.setVisible(false);
-		frame.getContentPane().add(logInPanel);
-		logInPanel.setLayout(null);
+		adminPanel = new JPanel();
+		adminPanel.setBackground(Color.LIGHT_GRAY);
+		adminPanel.setBounds(252, 227, 636, 404);
+		adminPanel.setVisible(false);
+		frame.getContentPane().add(adminPanel);
+		adminPanel.setLayout(null);
 		
-		JLabel lblEmail = new JLabel("Email:");
-		lblEmail.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
-		lblEmail.setBounds(81, 123, 101, 16);
-		logInPanel.add(lblEmail);
+		lblAdministrionPage = new JLabel("Administrion Page");
+		lblAdministrionPage.setFont(new Font("Apple Chancery", Font.PLAIN, 27));
+		lblAdministrionPage.setBounds(31, 17, 264, 45);
+		adminPanel.add(lblAdministrionPage);
 		
-		JLabel lblPassword = new JLabel("Password:");
-		lblPassword.setFont(new Font("Lucida Grande", Font.PLAIN, 20));
-		lblPassword.setBounds(81, 165, 101, 16);
-		logInPanel.add(lblPassword);
-		
-		txtFieldEmail = new JTextField();
-		txtFieldEmail.setBounds(194, 121, 336, 26);
-		logInPanel.add(txtFieldEmail);
-		txtFieldEmail.setColumns(10);
-		
-		txtFieldPassword = new JTextField();
-		txtFieldPassword.setBounds(194, 163, 336, 26);
-		logInPanel.add(txtFieldPassword);
-		txtFieldPassword.setColumns(10);
-		
-		JButton btnLogIn = new JButton("Log In");
-		btnLogIn.setBounds(513, 340, 117, 29);
-		btnLogIn.addActionListener(new ActionListener() {
+		btnInstall = new JButton("Install");
+		btnInstall.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				reservationTextArea.setText("");
-				String email = txtFieldEmail.getText();
-				String password = txtFieldPassword.getText();
 				try {
-					userNum = appInteraction.userID(email,password);
-					name = appInteraction.userName(email,password);
-				} catch (SQLException e1) {
-					System.out.println(e1);
-				}
-				txtpnWelcome.setText("Welcome, "+name+"\n Account Number: "+userNum);
-				logInPanel.setVisible(false);
-				welcomePanel.setVisible(true);
-				bookingPanel.setVisible(false);	
-				lblReservationLogIn.setText("Your Reservations are Listed Below");
-				try {
-					appInteraction.reservationList(userNum);
+					appInteraction.initDatabase();
 				} catch (SQLException e1) {
 					e1.printStackTrace();
 				}
 			}
 		});
-		logInPanel.add(btnLogIn);
+		btnInstall.setBounds(491, 355, 117, 29);
+		adminPanel.add(btnInstall);
 		
-		txtpnPleaseInputYour = new JTextPane();
-		txtpnPleaseInputYour.setBackground(Color.LIGHT_GRAY);
-		txtpnPleaseInputYour.setFont(new Font("Apple Chancery", Font.PLAIN, 20));
-		txtpnPleaseInputYour.setText("Please input your email and password.");
-		txtpnPleaseInputYour.setBounds(48, 42, 501, 29);
-		logInPanel.add(txtpnPleaseInputYour);
-	}
-	
-	private void mouseclick(MouseEvent E) {
-		
+		txtpnAdminmessage = new JTextPane();
+		txtpnAdminmessage.setBackground(new Color(192, 192, 192));
+		txtpnAdminmessage.setText("This page is to set up the database for the application. Please run this at the start of the application.");
+		txtpnAdminmessage.setBounds(318, 75, 290, 78);
+		adminPanel.add(txtpnAdminmessage);
 	}
 }
